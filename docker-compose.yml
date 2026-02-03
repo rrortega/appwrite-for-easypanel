@@ -140,6 +140,11 @@ services:
       - traefik.http.routers.appwrite_console_http.priority=100
       - traefik.http.routers.appwrite_console_https.priority=100
 
+       # ✅ middleware: strip /console before forwarding
+      - traefik.http.middlewares.appwrite_console_strip.stripprefix.prefixes=/console
+      - traefik.http.routers.appwrite_console_http.middlewares=appwrite_console_strip
+      - traefik.http.routers.appwrite_console_https.middlewares=appwrite_console_strip
+
 
   openruntimes-executor:
     image: openruntimes/executor:0.6.11
