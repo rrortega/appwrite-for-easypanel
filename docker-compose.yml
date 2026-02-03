@@ -1,0 +1,176 @@
+x-logging: &x-logging
+  logging:
+    driver: json-file
+    options:
+      max-file: "5"
+      max-size: "10m"
+
+services:
+  traefik:
+    image: traefik:2.11
+    <<: *x-logging
+    restart: unless-stopped
+    command:
+      - --providers.file.directory=/storage/config
+      - --providers.file.watch=true
+      - --providers.docker=true
+      - --providers.docker.exposedByDefault=false
+      - --providers.docker.constraints=Label(`traefik.constraint-label-stack`,`appwrite`)
+      - --entrypoints.appwrite_web.address=:80
+      - --entrypoints.appwrite_websecure.address=:443
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - appwrite-config:/storage/config:ro
+      - appwrite-certificates:/storage/certificates:ro
+    depends_on:
+      - appwrite
+    networks:
+      - gateway
+      - appwrite
+
+  appwrite:
+    image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
+    <<: *x-logging
+    restart: unless-stopped
+    networks:
+      - appwrite
+    labels:
+      - traefik.enable=true
+      - traefik.constraint-label-stack=appwrite
+      - traefik.docker.network=appwrite
+      - traefik.http.services.appwrite_api.loadbalancer.server.port=80
+      - traefik.http.routers.appwrite_api_http.entrypoints=appwrite_web
+      - traefik.http.routers.appwrite_api_http.rule=PathPrefix(`/`)
+      - traefik.http.routers.appwrite_api_http.service=appwrite_api
+      - traefik.http.routers.appwrite_api_https.entrypoints=appwrite_websecure
+      - traefik.http.routers.appwrite_api_https.rule=PathPrefix(`/`)
+      - traefik.http.routers.appwrite_api_https.service=appwrite_api
+      - traefik.http.routers.appwrite_api_https.tls=true
+    volumes:
+      - appwrite-uploads:/storage/uploads:rw
+      - appwrite-cache:/storage/cache:rw
+      - appwrite-config:/storage/config:rw
+      - appwrite-certificates:/storage/certificates:rw
+      - appwrite-functions:/storage/functions:rw
+      - appwrite-builds:/storage/builds:rw
+    depends_on:
+      - mariadb
+      - redis
+      - openruntimes-executor
+    environment:
+      - _APP_ENV
+      - _APP_OPENSSL_KEY_V1
+      - _APP_DOMAIN
+      - _APP_DOMAIN_TARGET
+      - _APP_DOMAIN_FUNCTIONS
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_DB_ROOT_PASS
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_PASS
+      - _APP_FUNCTIONS_RUNTIMES
+      - _APP_EXECUTOR_SECRET
+      - _APP_USAGE_STATS
+      - _APP_LOGGING_CONFIG
+
+  appwrite-realtime:
+    image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
+    entrypoint: realtime
+    <<: *x-logging
+    restart: unless-stopped
+    networks:
+      - appwrite
+    labels:
+      - traefik.enable=true
+      - traefik.constraint-label-stack=appwrite
+      - traefik.docker.network=appwrite
+      - traefik.http.services.appwrite_realtime.loadbalancer.server.port=80
+      - traefik.http.routers.appwrite_realtime_ws.entrypoints=appwrite_web
+      - traefik.http.routers.appwrite_realtime_ws.rule=PathPrefix(`/v1/realtime`)
+      - traefik.http.routers.appwrite_realtime_ws.service=appwrite_realtime
+      - traefik.http.routers.appwrite_realtime_wss.entrypoints=appwrite_websecure
+      - traefik.http.routers.appwrite_realtime_wss.rule=PathPrefix(`/v1/realtime`)
+      - traefik.http.routers.appwrite_realtime_wss.service=appwrite_realtime
+      - traefik.http.routers.appwrite_realtime_wss.tls=true
+    depends_on:
+      - mariadb
+      - redis
+    environment:
+      - _APP_ENV
+      - _APP_OPENSSL_KEY_V1
+      - _APP_DB_HOST
+      - _APP_DB_PORT
+      - _APP_DB_SCHEMA
+      - _APP_DB_USER
+      - _APP_DB_PASS
+      - _APP_REDIS_HOST
+      - _APP_REDIS_PORT
+      - _APP_REDIS_PASS
+      - _APP_LOGGING_CONFIG
+
+  openruntimes-executor:
+    image: openruntimes/executor:0.6.11
+    hostname: exc1
+    <<: *x-logging
+    restart: unless-stopped
+    stop_signal: SIGINT
+    networks:
+      - appwrite
+      - runtimes
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - appwrite-builds:/storage/builds:rw
+      - appwrite-functions:/storage/functions:rw
+      - /tmp:/tmp:rw
+    environment:
+      - OPR_EXECUTOR_ENV=${_APP_ENV}
+      - OPR_EXECUTOR_SECRET=${_APP_EXECUTOR_SECRET}
+      - OPR_EXECUTOR_RUNTIMES=${_APP_FUNCTIONS_RUNTIMES}
+      - OPR_EXECUTOR_LOGGING_CONFIG=${_APP_LOGGING_CONFIG}
+
+  mariadb:
+    image: mariadb:10.11
+    <<: *x-logging
+    restart: unless-stopped
+    networks:
+      - appwrite
+    volumes:
+      - appwrite-mariadb:/var/lib/mysql:rw
+    environment:
+      - MYSQL_ROOT_PASSWORD=${_APP_DB_ROOT_PASS}
+      - MYSQL_DATABASE=${_APP_DB_SCHEMA}
+      - MYSQL_USER=${_APP_DB_USER}
+      - MYSQL_PASSWORD=${_APP_DB_PASS}
+      - MARIADB_AUTO_UPGRADE=1
+    command: mysqld --innodb-flush-method=fsync
+
+  redis:
+    image: redis:7.2.4-alpine
+    <<: *x-logging
+    restart: unless-stopped
+    networks:
+      - appwrite
+    volumes:
+      - appwrite-redis:/data:rw
+
+networks:
+  gateway:
+    name: gateway
+  appwrite:
+    name: appwrite
+  runtimes:
+    name: runtimes
+
+volumes:
+  appwrite-mariadb:
+  appwrite-redis:
+  appwrite-cache:
+  appwrite-uploads:
+  appwrite-certificates:
+  appwrite-functions:
+  appwrite-builds:
+  appwrite-config:
