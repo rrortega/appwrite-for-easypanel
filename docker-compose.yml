@@ -34,7 +34,6 @@ services:
     restart: unless-stopped
     networks:
       - appwrite
-      - gateway
     labels:
       - traefik.enable=true
       - traefik.constraint-label-stack=appwrite
@@ -87,7 +86,6 @@ services:
     restart: unless-stopped
     networks:
       - appwrite
-      - gateway
     labels:
       - traefik.enable=true
       - traefik.constraint-label-stack=appwrite
