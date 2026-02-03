@@ -17,6 +17,7 @@ services:
       - --providers.docker.exposedByDefault=false
       - --providers.docker.constraints=Label(`traefik.constraint-label-stack`,`appwrite`)
       - --entrypoints.appwrite_web.address=:80
+      - --entrypoints.appwrite_web.forwardedHeaders.insecure=true
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - appwrite-config:/storage/config:ro
