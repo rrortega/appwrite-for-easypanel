@@ -25,10 +25,8 @@ services:
     depends_on:
       - appwrite
     networks:
-      gateway:
-        aliases:
-          - "$(PROJECT_NAME)_$(SERVICE_NAME)"
-      appwrite:
+      - gateway
+      - appwrite
 
   appwrite:
     image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
