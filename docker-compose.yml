@@ -17,7 +17,6 @@ services:
       - --providers.docker.exposedByDefault=false
       - --providers.docker.constraints=Label(`traefik.constraint-label-stack`,`appwrite`)
       - --entrypoints.appwrite_web.address=:80
-      - --entrypoints.appwrite_websecure.address=:443
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - appwrite-config:/storage/config:ro
@@ -42,10 +41,6 @@ services:
       - traefik.http.routers.appwrite_api_http.entrypoints=appwrite_web
       - traefik.http.routers.appwrite_api_http.rule=PathPrefix(`/`)
       - traefik.http.routers.appwrite_api_http.service=appwrite_api
-      - traefik.http.routers.appwrite_api_https.entrypoints=appwrite_websecure
-      - traefik.http.routers.appwrite_api_https.rule=PathPrefix(`/`)
-      - traefik.http.routers.appwrite_api_https.service=appwrite_api
-      - traefik.http.routers.appwrite_api_https.tls=true
       - traefik.http.routers.appwrite_api_http.priority=1
       - traefik.http.routers.appwrite_api_https.priority=1
     volumes:
@@ -93,11 +88,7 @@ services:
       - traefik.http.services.appwrite_realtime.loadbalancer.server.port=80
       - traefik.http.routers.appwrite_realtime_ws.entrypoints=appwrite_web
       - traefik.http.routers.appwrite_realtime_ws.rule=PathPrefix(`/v1/realtime`)
-      - traefik.http.routers.appwrite_realtime_ws.service=appwrite_realtime
-      - traefik.http.routers.appwrite_realtime_wss.entrypoints=appwrite_websecure
-      - traefik.http.routers.appwrite_realtime_wss.rule=PathPrefix(`/v1/realtime`)
-      - traefik.http.routers.appwrite_realtime_wss.service=appwrite_realtime
-      - traefik.http.routers.appwrite_realtime_wss.tls=true
+      - traefik.http.routers.appwrite_realtime_ws.service=appwrite_realtime 
       - traefik.http.routers.appwrite_realtime_ws.priority=200
       - traefik.http.routers.appwrite_realtime_wss.priority=200
     depends_on:
@@ -130,20 +121,10 @@ services:
       - traefik.http.routers.appwrite_console_http.entrypoints=appwrite_web
       - traefik.http.routers.appwrite_console_http.rule=PathPrefix(`/console`)
       - traefik.http.routers.appwrite_console_http.service=appwrite_console
-
-      # HTTPS
-      - traefik.http.routers.appwrite_console_https.entrypoints=appwrite_websecure
-      - traefik.http.routers.appwrite_console_https.rule=PathPrefix(`/console`)
-      - traefik.http.routers.appwrite_console_https.service=appwrite_console
-      - traefik.http.routers.appwrite_console_https.tls=true
-
+  
       - traefik.http.routers.appwrite_console_http.priority=100
       - traefik.http.routers.appwrite_console_https.priority=100
-
-       # ✅ middleware: strip /console before forwarding
-      - traefik.http.middlewares.appwrite_console_strip.stripprefix.prefixes=/console
-      - traefik.http.routers.appwrite_console_http.middlewares=appwrite_console_strip
-      - traefik.http.routers.appwrite_console_https.middlewares=appwrite_console_strip
+      
 
 
   openruntimes-executor:
