@@ -32,7 +32,7 @@ services:
       - _APP_DB_HOST=${_APP_DB_HOST}
       - _APP_DB_PORT=${_APP_DB_PORT}
       - _APP_DB_SCHEMA=${_APP_DB_SCHEMA}
-      - _APP_DB_USER=${_APP_DB_SCHEMA}
+      - _APP_DB_USER=${_APP_DB_USER}
       - _APP_DB_PASS=${_APP_DB_PASS}
       - _APP_DB_ROOT_PASS=${_APP_DB_ROOT_PASS}
       - _APP_REDIS_HOST=${_APP_REDIS_HOST}
@@ -58,7 +58,7 @@ services:
       - _APP_OPENSSL_KEY_V1=${_APP_OPENSSL_KEY_V1}
       - _APP_DB_HOST=${_APP_DB_HOST}
       - _APP_DB_PORT=${_APP_DB_PORT}
-      - _APP_DB_SCHEMA=${_APP_DB_SCHEMA}
+      - _APP_DB_SCHEMA=${_APP_DB_USER}
       - _APP_DB_USER=${_APP_DB_USER}
       - _APP_DB_PASS=${_APP_DB_PASS}
       - _APP_REDIS_HOST=${_APP_REDIS_HOST}
