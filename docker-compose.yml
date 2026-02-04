@@ -5,45 +5,13 @@ x-logging: &x-logging
       max-file: "5"
       max-size: "10m"
 
-services:
-  traefik:
-    image: traefik:2.11
-    <<: *x-logging
-    restart: unless-stopped
-    command:
-      - --providers.file.directory=/storage/config
-      - --providers.file.watch=true
-      - --providers.docker=true
-      - --providers.docker.exposedByDefault=false
-      - --providers.docker.constraints=Label(`traefik.constraint-label-stack`,`appwrite`)
-      - --entrypoints.appwrite_web.address=:80
-      - --entrypoints.appwrite_web.forwardedHeaders.insecure=true
-    volumes:
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - appwrite-config:/storage/config:ro
-      - appwrite-certificates:/storage/certificates:ro
-    depends_on:
-      - appwrite
-    networks:
-      - gateway
-      - appwrite
-
+services: 
   appwrite:
     image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
     <<: *x-logging
     restart: unless-stopped
     networks:
       - appwrite
-    labels:
-      - traefik.enable=true
-      - traefik.constraint-label-stack=appwrite
-      - traefik.docker.network=gateway
-      - traefik.http.services.appwrite_api.loadbalancer.server.port=80
-      - traefik.http.routers.appwrite_api_http.entrypoints=appwrite_web
-      - traefik.http.routers.appwrite_api_http.rule=PathPrefix(`/`)
-      - traefik.http.routers.appwrite_api_http.service=appwrite_api
-      - traefik.http.routers.appwrite_api_http.priority=1
-      - traefik.http.routers.appwrite_api_https.priority=1
     volumes:
       - appwrite-uploads:/storage/uploads:rw
       - appwrite-cache:/storage/cache:rw
@@ -82,16 +50,6 @@ services:
     restart: unless-stopped
     networks:
       - appwrite
-    labels:
-      - traefik.enable=true
-      - traefik.constraint-label-stack=appwrite
-      - traefik.docker.network=gateway
-      - traefik.http.services.appwrite_realtime.loadbalancer.server.port=80
-      - traefik.http.routers.appwrite_realtime_ws.entrypoints=appwrite_web
-      - traefik.http.routers.appwrite_realtime_ws.rule=PathPrefix(`/v1/realtime`)
-      - traefik.http.routers.appwrite_realtime_ws.service=appwrite_realtime 
-      - traefik.http.routers.appwrite_realtime_ws.priority=200
-      - traefik.http.routers.appwrite_realtime_wss.priority=200
     depends_on:
       - mariadb
       - redis
@@ -112,21 +70,6 @@ services:
     restart: unless-stopped
     networks:
       - appwrite
-    labels:
-      - traefik.enable=true
-      - traefik.constraint-label-stack=appwrite
-      - traefik.docker.network=appwrite
-      - traefik.http.services.appwrite_console.loadbalancer.server.port=80
-
-      # HTTP
-      - traefik.http.routers.appwrite_console_http.entrypoints=appwrite_web
-      - traefik.http.routers.appwrite_console_http.rule=PathPrefix(`/console`)
-      - traefik.http.routers.appwrite_console_http.service=appwrite_console
-  
-      - traefik.http.routers.appwrite_console_http.priority=100
-      - traefik.http.routers.appwrite_console_https.priority=100
-      
-
 
   openruntimes-executor:
     image: openruntimes/executor:0.6.11
