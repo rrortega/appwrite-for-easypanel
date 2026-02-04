@@ -116,10 +116,7 @@ services:
     volumes:
       - appwrite-redis:/data:rw
 
-networks:
-  gateway:
-    name: gateway
-    external: true
+networks: 
   appwrite:
     name: appwrite
   runtimes:
