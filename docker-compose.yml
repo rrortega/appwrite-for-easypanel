@@ -12,6 +12,7 @@ services:
     restart: unless-stopped
     networks:
       - appwrite
+      - gateway
     volumes:
       - appwrite-uploads:/storage/uploads:rw
       - appwrite-cache:/storage/cache:rw
@@ -24,24 +25,24 @@ services:
       - redis
       - openruntimes-executor
     environment:
-      - _APP_ENV
-      - _APP_OPENSSL_KEY_V1
-      - _APP_DOMAIN
-      - _APP_DOMAIN_TARGET
-      - _APP_DOMAIN_FUNCTIONS
-      - _APP_DB_HOST
-      - _APP_DB_PORT
-      - _APP_DB_SCHEMA
-      - _APP_DB_USER
-      - _APP_DB_PASS
-      - _APP_DB_ROOT_PASS
-      - _APP_REDIS_HOST
-      - _APP_REDIS_PORT
-      - _APP_REDIS_PASS
-      - _APP_FUNCTIONS_RUNTIMES
-      - _APP_EXECUTOR_SECRET
-      - _APP_USAGE_STATS
-      - _APP_LOGGING_CONFIG
+      - _APP_ENV=${_APP_ENV}
+      - _APP_OPENSSL_KEY_V1=${_APP_OPENSSL_KEY_V1}
+      - _APP_DOMAIN=${_APP_DOMAIN}
+      - _APP_DOMAIN_TARGET=${_APP_DOMAIN_TARGET}
+      - _APP_DOMAIN_FUNCTIONS=${_APP_DOMAIN_FUNCTIONS}
+      - _APP_DB_HOST=${_APP_DB_HOST}
+      - _APP_DB_PORT=${_APP_DB_PORT}
+      - _APP_DB_SCHEMA=${_APP_DB_SCHEMA}
+      - _APP_DB_USER=${_APP_DB_SCHEMA}
+      - _APP_DB_PASS=${_APP_DB_PASS}
+      - _APP_DB_ROOT_PASS=${_APP_DB_ROOT_PASS}
+      - _APP_REDIS_HOST=${_APP_REDIS_HOST}
+      - _APP_REDIS_PORT=${_APP_REDIS_PORT}
+      - _APP_REDIS_PASS=${_APP_REDIS_PASS}
+      - _APP_FUNCTIONS_RUNTIMES=${_APP_FUNCTIONS_RUNTIMES}
+      - _APP_EXECUTOR_SECRET=${_APP_EXECUTOR_SECRET}
+      - _APP_USAGE_STATS=${_APP_USAGE_STATS}
+      - _APP_LOGGING_CONFIG=${_APP_LOGGING_CONFIG}
 
   appwrite-realtime:
     image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
@@ -50,26 +51,28 @@ services:
     restart: unless-stopped
     networks:
       - appwrite
+      - gateway
     depends_on:
       - mariadb
       - redis
     environment:
-      - _APP_ENV
-      - _APP_OPENSSL_KEY_V1
-      - _APP_DB_HOST
-      - _APP_DB_PORT
-      - _APP_DB_SCHEMA
-      - _APP_DB_USER
-      - _APP_DB_PASS
-      - _APP_REDIS_HOST
-      - _APP_REDIS_PORT
-      - _APP_REDIS_PASS
-      - _APP_LOGGING_CONFIG
+      - _APP_ENV=${_APP_ENV}
+      - _APP_OPENSSL_KEY_V1=${_APP_OPENSSL_KEY_V1}
+      - _APP_DB_HOST=${_APP_DB_HOST}
+      - _APP_DB_PORT=${_APP_DB_PORT}
+      - _APP_DB_SCHEMA=${_APP_DB_SCHEMA}
+      - _APP_DB_USER=${_APP_DB_USER}
+      - _APP_DB_PASS=${_APP_DB_PASS}
+      - _APP_REDIS_HOST=${_APP_REDIS_HOST}
+      - _APP_REDIS_PORT=${_APP_REDIS_PORT}
+      - _APP_REDIS_PASS=${_APP_REDIS_PASS}
+      - _APP_LOGGING_CONFIG=${_APP_LOGGING_CONFIG}
   appwrite-console:
     image: appwrite/console:7.4.7
     restart: unless-stopped
     networks:
       - appwrite
+      - gateway
 
   openruntimes-executor:
     image: openruntimes/executor:0.6.11
@@ -121,6 +124,9 @@ networks:
     name: appwrite
   runtimes:
     name: runtimes
+  gateway:
+    external: true
+    name: gateway
 
 volumes:
   appwrite-mariadb:
