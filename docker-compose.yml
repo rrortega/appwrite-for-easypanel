@@ -43,6 +43,13 @@ services:
       - _APP_USAGE_STATS=${_APP_USAGE_STATS}
       - _APP_LOGGING_CONFIG=${_APP_LOGGING_CONFIG}
       - _APP_EMAIL_CERTIFICATES=${_APP_EMAIL_CERTIFICATES}
+      - _APP_SYSTEM_EMAIL_NAME=${_APP_SYSTEM_EMAIL_NAME}
+      - _APP_SYSTEM_EMAIL_ADDRESS=${_APP_SYSTEM_EMAIL_ADDRESS}
+      - _APP_SMTP_HOST=${_APP_SMTP_HOST}
+      - _APP_SMTP_PORT=${_APP_SMTP_PORT}
+      - _APP_SMTP_SECURE=${_APP_SMTP_SECURE}
+      - _APP_SMTP_USERNAME=${_APP_SMTP_USERNAME}
+      - _APP_SMTP_PASSWORD=${_APP_SMTP_PASSWORD}
 
   worker-mails:
     image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
@@ -69,6 +76,7 @@ services:
       - _APP_DB_USER=${_APP_DB_USER}
       - _APP_DB_PASS=${_APP_DB_PASS}
       - _APP_DB_SCHEMA=${_APP_DB_SCHEMA}
+      
 
   worker-webhooks:
     image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
@@ -90,6 +98,13 @@ services:
       - _APP_DB_PASS=${_APP_DB_PASS}
       - _APP_DB_SCHEMA=${_APP_DB_SCHEMA} 
       - _APP_WORKER_PER_CORE=${_APP_WORKER_PER_CORE}
+      - _APP_SYSTEM_EMAIL_NAME=${_APP_SYSTEM_EMAIL_NAME}
+      - _APP_SYSTEM_EMAIL_ADDRESS=${_APP_SYSTEM_EMAIL_ADDRESS}
+      - _APP_SMTP_HOST=${_APP_SMTP_HOST}
+      - _APP_SMTP_PORT=${_APP_SMTP_PORT}
+      - _APP_SMTP_SECURE=${_APP_SMTP_SECURE}
+      - _APP_SMTP_USERNAME=${_APP_SMTP_USERNAME}
+      - _APP_SMTP_PASSWORD=${_APP_SMTP_PASSWORD}
   appwrite-realtime:
     image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
     entrypoint: realtime
@@ -160,6 +175,13 @@ services:
       - _APP_DB_PASS=${_APP_DB_PASS}
       - _APP_DB_ROOT_PASS=${_APP_DB_ROOT_PASS}
       - _APP_WORKER_PER_CORE=${_APP_WORKER_PER_CORE}
+      - _APP_SYSTEM_EMAIL_NAME=${_APP_SYSTEM_EMAIL_NAME}
+      - _APP_SYSTEM_EMAIL_ADDRESS=${_APP_SYSTEM_EMAIL_ADDRESS}
+      - _APP_SMTP_HOST=${_APP_SMTP_HOST}
+      - _APP_SMTP_PORT=${_APP_SMTP_PORT}
+      - _APP_SMTP_SECURE=${_APP_SMTP_SECURE}
+      - _APP_SMTP_USERNAME=${_APP_SMTP_USERNAME}
+      - _APP_SMTP_PASSWORD=${_APP_SMTP_PASSWORD}
   worker-deletes:
     image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
     command: worker-deletes
