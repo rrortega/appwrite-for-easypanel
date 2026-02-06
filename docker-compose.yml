@@ -175,6 +175,7 @@ services:
       - _APP_OPENSSL_KEY_V1=${_APP_OPENSSL_KEY_V1}
       - _APP_REDIS_HOST=redis
       - _APP_DB_HOST=mariadb
+      - _APP_DB_SCHEMA=${_APP_DB_SCHEMA}
       - _APP_DB_PASS=${_APP_DB_PASS}
       - _APP_DB_USER=${_APP_DB_USER}
       - _APP_EMAIL_CERTIFICATES=${_APP_EMAIL_CERTIFICATES}
