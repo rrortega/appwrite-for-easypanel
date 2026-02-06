@@ -120,6 +120,23 @@ services:
       - _APP_EXECUTOR_SECRET=${_APP_EXECUTOR_SECRET}
       - _APP_EXECUTOR_HOST=openruntimes-executor
       - _APP_REDIS_HOST=redis
+  worker-deletes:
+    image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
+    command: worker-deletes
+    <<: *x-logging
+    restart: unless-stopped
+    networks:
+      - appwrite
+    depends_on:
+      - redis
+      - mariadb
+    environment:
+      - _APP_ENV=${_APP_ENV}
+      - _APP_OPENSSL_KEY_V1=${_APP_OPENSSL_KEY_V1}
+      - _APP_REDIS_HOST=redis
+      - _APP_DB_HOST=mariadb
+      - _APP_DB_PASS=${_APP_DB_PASS}
+      - _APP_DB_USER=${_APP_DB_USER}
 
   openruntimes-executor:
     image: openruntimes/executor:0.7.22
