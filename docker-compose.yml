@@ -69,7 +69,7 @@ services:
       - _APP_DB_USER=${_APP_DB_USER}
       - _APP_DB_PASS=${_APP_DB_PASS}
       - _APP_DB_SCHEMA=${_APP_DB_SCHEMA}
-      
+
   worker-webhooks:
     image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
     command: worker-webhooks
@@ -116,23 +116,7 @@ services:
     image: appwrite/console:7.4.7
     restart: unless-stopped
     networks:
-      - appwrite
-
-  realtime:
-    image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
-    command: realtime
-    <<: *x-logging
-    restart: unless-stopped
-    networks:
-      - appwrite
-    depends_on:
-      - mariadb
-      - redis
-    environment:
-      - _APP_ENV=${_APP_ENV}
-      - _APP_OPENSSL_KEY_V1=${_APP_OPENSSL_KEY_V1}
-      - _APP_REDIS_HOST=redis
-      - _APP_DB_HOST=mariadb
+      - appwrite 
 
   # WORKER CRÍTICO PARA TUS ATRIBUTOS
   worker-databases:
