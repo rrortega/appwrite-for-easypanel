@@ -100,11 +100,13 @@ services:
       - redis
       - mariadb
     environment:
-      - _APP_ENV=${_APP_ENV}
       - _APP_DB_HOST=mariadb
+      - _APP_DB_USER=${_APP_DB_USER}
       - _APP_DB_PASS=${_APP_DB_PASS}
+      - _APP_DB_SCHEMA=${_APP_DB_SCHEMA}
       - _APP_REDIS_HOST=redis
       - _APP_OPENSSL_KEY_V1=${_APP_OPENSSL_KEY_V1}
+      - _APP_ENV=${_APP_ENV}
 
   worker-functions:
     image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
