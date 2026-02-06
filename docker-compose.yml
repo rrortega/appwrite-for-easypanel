@@ -120,6 +120,10 @@ services:
       - _APP_EXECUTOR_SECRET=${_APP_EXECUTOR_SECRET}
       - _APP_EXECUTOR_HOST=openruntimes-executor
       - _APP_REDIS_HOST=redis
+      - MYSQL_ROOT_PASSWORD=${_APP_DB_ROOT_PASS}
+      - MYSQL_DATABASE=${_APP_DB_SCHEMA}
+      - MYSQL_USER=${_APP_DB_USER}
+      - MYSQL_PASSWORD=${_APP_DB_PASS}
   worker-deletes:
     image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
     command: worker-deletes
