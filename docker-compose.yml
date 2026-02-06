@@ -44,6 +44,32 @@ services:
       - _APP_LOGGING_CONFIG=${_APP_LOGGING_CONFIG}
       - _APP_EMAIL_CERTIFICATES=${_APP_EMAIL_CERTIFICATES}
 
+  worker-mails:
+    image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
+    command: worker-mails
+    <<: *x-logging
+    restart: unless-stopped
+    networks:
+      - appwrite
+    depends_on:
+      - redis
+      - mariadb
+    environment:
+      - _APP_ENV=${_APP_ENV}
+      - _APP_OPENSSL_KEY_V1=${_APP_OPENSSL_KEY_V1}
+      - _APP_SYSTEM_EMAIL_NAME=${_APP_SYSTEM_EMAIL_NAME}
+      - _APP_SYSTEM_EMAIL_ADDRESS=${_APP_SYSTEM_EMAIL_ADDRESS}
+      - _APP_SMTP_HOST=${_APP_SMTP_HOST}
+      - _APP_SMTP_PORT=${_APP_SMTP_PORT}
+      - _APP_SMTP_SECURE=${_APP_SMTP_SECURE}
+      - _APP_SMTP_USERNAME=${_APP_SMTP_USERNAME}
+      - _APP_SMTP_PASSWORD=${_APP_SMTP_PASSWORD}
+      - _APP_REDIS_HOST=redis
+      - _APP_DB_HOST=mariadb
+      - _APP_DB_USER=${_APP_DB_USER}
+      - _APP_DB_PASS=${_APP_DB_PASS}
+      - _APP_DB_SCHEMA=${_APP_DB_SCHEMA}
+      
   worker-webhooks:
     image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
     command: worker-webhooks
