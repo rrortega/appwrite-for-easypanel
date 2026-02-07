@@ -131,7 +131,11 @@ services:
     image: appwrite/console:7.4.7
     restart: unless-stopped
     networks:
-      - appwrite 
+      - appwrite
+    environment: 
+      - _APP_STORAGE_LIMIT=1000000000
+      - _APP_STORAGE_PREVIEW_LIMIT=20000000
+      - _APP_FUNCTIONS_SIZE_LIMIT=30000000 
 
   # WORKER CRÍTICO PARA TUS ATRIBUTOS
   worker-databases:
