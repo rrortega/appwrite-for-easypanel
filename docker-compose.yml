@@ -152,6 +152,9 @@ services:
       - _APP_REDIS_HOST=redis
       - _APP_OPENSSL_KEY_V1=${_APP_OPENSSL_KEY_V1}
       - _APP_ENV=${_APP_ENV}
+       - _APP_STORAGE_LIMIT=1000000000
+      - _APP_STORAGE_PREVIEW_LIMIT=20000000
+      - _APP_FUNCTIONS_SIZE_LIMIT=30000000 
 
   worker-functions:
     image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
@@ -202,6 +205,9 @@ services:
       - _APP_DB_USER=${_APP_DB_USER}
       - _APP_EMAIL_CERTIFICATES=${_APP_EMAIL_CERTIFICATES}
       - _APP_WORKER_PER_CORE=${_APP_WORKER_PER_CORE}
+      - _APP_STORAGE_LIMIT=1000000000
+      - _APP_STORAGE_PREVIEW_LIMIT=20000000
+      - _APP_FUNCTIONS_SIZE_LIMIT=30000000 
 
   openruntimes-executor:
     image: openruntimes/executor:0.7.22
