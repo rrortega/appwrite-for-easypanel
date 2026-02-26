@@ -221,6 +221,7 @@ services:
     image: openruntimes/executor:0.7.22
     <<: *x-logging
     restart: unless-stopped
+    ostname: exc1
     networks:
       - appwrite
     volumes:
