@@ -303,6 +303,7 @@ networks:
     name: appwrite
   awruntimes:
     name: awruntimes
+    driver: bridge
     attachable: true
 
 volumes:
