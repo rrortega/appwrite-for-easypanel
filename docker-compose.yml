@@ -227,7 +227,7 @@ services:
       - _APP_FUNCTIONS_SIZE_LIMIT=30000000 
 
   openruntimes-executor:
-    image: openruntimes/executor:0.9.3
+    image: openruntimes/executor:0.9.11
     <<: *x-logging
     restart: unless-stopped
     hostname: exc1
