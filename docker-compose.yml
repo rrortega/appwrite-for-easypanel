@@ -58,6 +58,7 @@ services:
       - _APP_OPTIONS_RATE_LIMIT_DURATION=60
       # Desactiva el límite específico de intentos de sesión por IP
       - _APP_AUTH_LIMIT=0
+      - _APP_OPTIONS_ABUSE=disabled
   worker-mails:
     image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
     command: worker-mails
