@@ -231,6 +231,7 @@ services:
     <<: *x-logging
     restart: unless-stopped
     hostname: exc1
+    privileged: true
     networks:
       - appwrite
       - runtimes
