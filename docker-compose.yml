@@ -251,6 +251,7 @@ services:
       - _APP_FUNCTIONS_BUILD_TIMEOUT=900
       - OPEN_RUNTIMES_ENV=production
       - DOCKER_DRIVER=overlay2
+      - OPEN_RUNTIMES_DSN=redis://redis:6379
   worker-builds:
     image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
     command: worker-builds
