@@ -296,7 +296,7 @@ networks:
   appwrite:
     name: appwrite
   runtimes:
-    name: runtimes
+    name: awruntimes
     attachable: true
 
 volumes:
