@@ -297,7 +297,7 @@ networks:
     name: appwrite
   runtimes:
     name: runtimes
-    external: true
+    attachable: true
 
 volumes:
   appwrite-mariadb:
