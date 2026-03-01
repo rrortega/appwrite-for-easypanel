@@ -230,7 +230,6 @@ services:
     image: openruntimes/executor:latest
     <<: *x-logging
     restart: unless-stopped
-    container_name: openruntimes-executor
     hostname: executor
     stop_signal: SIGINT
     privileged: true
