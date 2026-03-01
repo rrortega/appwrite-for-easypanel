@@ -230,7 +230,7 @@ services:
     image: openruntimes/executor:latest
     <<: *x-logging
     restart: unless-stopped
-    #hostname: exc1
+    hostname: exc1
     privileged: true
     networks:
       - appwrite
