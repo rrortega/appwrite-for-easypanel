@@ -305,6 +305,7 @@ networks:
     name: appwrite
   openruntimes-runtimes:
     name: openruntimes-runtimes
+    attachable: true
 
 volumes:
   appwrite-mariadb:
