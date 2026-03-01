@@ -249,6 +249,7 @@ services:
       - _APP_FUNCTIONS_MEMORY=1024
       - _APP_FUNCTIONS_MEMORY_LIMIT=1024
       - _APP_FUNCTIONS_BUILD_TIMEOUT=900
+      - OPEN_RUNTIMES_ENV=production
       - DOCKER_DRIVER=overlay2
   worker-builds:
     image: appwrite/appwrite:${APPWRITE_VERSION:-1.8.1}
